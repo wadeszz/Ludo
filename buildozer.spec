@@ -10,6 +10,7 @@ orientation = portrait
 fullscreen = 0
 android.api = 33
 android.permissions = INTERNET
+android.build_tools_version = 34.0.0
 
 [buildozer]
 log_level = 2
