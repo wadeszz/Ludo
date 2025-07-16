@@ -3,34 +3,36 @@ name: Build LudoUltimate APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Clone repo
+      - name: Checkout repo
         uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential git zip unzip openjdk-17-jdk python3-pip \
-            libffi-dev libssl-dev libsqlite3-dev zlib1g-dev libjpeg-dev libfreetype6-dev \
-            libpng-dev pkg-config libgl1-mesa-dev libgles2-mesa-dev
+          sudo apt install -y \
+            build-essential git zip unzip openjdk-17-jdk python3-pip \
+            libffi-dev libssl-dev libsdl2-dev libgles2-mesa-dev \
+            libgstreamer1.0-dev libmtdev-dev xclip xsel libjpeg-dev
 
           pip install --upgrade pip
-          pip install cython virtualenv
+          pip install cython virtualenv buildozer
 
-      - name: Build APK using Buildozer
-        run: |
-          pip install buildozer
-          buildozer android debug
+      - name: Initialize Buildozer spec
+        run: buildozer init || true
+
+      - name: Build APK
+        run: buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
